@@ -1,6 +1,6 @@
-[gd_scene load_steps=40 format=3 uid="uid://djhhur3atlogy"]
+[gd_scene load_steps=44 format=3 uid="uid://djhhur3atlogy"]
 
-[ext_resource type="Script" uid="uid://bu5tk16c4gvd1" path="res://player.gd" id="1_xhfnw"]
+[ext_resource type="Script" uid="uid://bu5tk16c4gvd1" path="res://Scripts/player.gd" id="1_xhfnw"]
 [ext_resource type="Texture2D" uid="uid://dc7fk5rxqeedf" path="res://Assets/characters/player.png" id="2_kne1u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3vjad"]
@@ -288,10 +288,62 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kpjcp"]
+size = Vector2(72, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6t5aa"]
+size = Vector2(78, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vgqql"]
+size = Vector2(42, 80)
+
+[node name="Player" type="CharacterBody2D"]
+position = Vector2(1, -1)
 script = ExtResource("1_xhfnw")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, -75)
 scale = Vector2(8, 8)
 sprite_frames = SubResource("SpriteFrames_5ncpa")
 animation = &"idleDown"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, 29)
+shape = SubResource("RectangleShape2D_kpjcp")
+
+[node name="hitBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox"]
+shape = SubResource("RectangleShape2D_cvnsp")
+
+[node name="hurtBoxDown" type="Area2D" parent="." groups=["hurtBox"]]
+position = Vector2(-23, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxDown"]
+position = Vector2(23, 101)
+shape = SubResource("RectangleShape2D_6t5aa")
+
+[node name="hurtBoxUp" type="Area2D" parent="." groups=["hurtBox"]]
+position = Vector2(-23, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxUp"]
+position = Vector2(22, -75)
+shape = SubResource("RectangleShape2D_6t5aa")
+
+[node name="hurtBoxLeft" type="Area2D" parent="." groups=["hurtBox"]]
+position = Vector2(-23, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxLeft"]
+position = Vector2(-66, 13)
+shape = SubResource("RectangleShape2D_vgqql")
+
+[node name="hurtBoxRight" type="Area2D" parent="." groups=["hurtBox"]]
+position = Vector2(-23, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxRight"]
+position = Vector2(110, 13)
+shape = SubResource("RectangleShape2D_vgqql")
+
+[connection signal="area_entered" from="hitBox" to="." method="_on_hit_box_area_entered"]

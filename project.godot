@@ -11,9 +11,17 @@ config_version=5
 [application]
 
 config/name="Rpg-mini curse"
-run/main_scene="uid://djhhur3atlogy"
+run/main_scene="uid://b7jvlrfpk3ibo"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+game_manager="*res://Scripts/game_manager.gd"
+
+[global_group]
+
+hurtBox="Para checar se o objeto é uma area responsável por aplicar dano"
 
 [input]
 

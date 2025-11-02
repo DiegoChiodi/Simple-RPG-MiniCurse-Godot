@@ -1,8 +1,11 @@
 extends CharacterBody2D
+class_name Player
 
 var directionLast : Vector2 = Vector2.ZERO
-const SPEED = 300.0
 @onready var sprite : AnimatedSprite2D = $sprite
+var speed : float = 300.0
+var vida : float = 300.0
+var damage : float = 50.0
 
 func _physics_process(delta: float) -> void:
 	var direction : Vector2 = Vector2.ZERO
@@ -33,7 +36,7 @@ func _physics_process(delta: float) -> void:
 		sprite.flip_h = true
 	
 	if moving:
-		velocity = direction * SPEED
+		velocity = direction * speed
 		directionLast = direction
 	else:
 		velocity = Vector2.ZERO
@@ -46,6 +49,16 @@ func _physics_process(delta: float) -> void:
 			sprite.play("idleDown")
 		else:
 			sprite.play("idleUp")
-		
 	
 	move_and_slide()
+	
+	
+
+func _on_hit_box_area_entered(area: Area2D) -> void:
+	if area.is_in_group('hurtBox') and area.get_parent() is Enemy:
+		takeDamage(area.get_parent().damage)
+
+func takeDamage(_damage : float) -> void:
+	vida -= _damage
+	if vida < 0:
+		queue_free()
