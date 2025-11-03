@@ -292,6 +292,7 @@ animations = [{
 size = Vector2(72, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
+size = Vector2(88, 80)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6t5aa"]
 size = Vector2(78, 40)
@@ -316,6 +317,7 @@ shape = SubResource("RectangleShape2D_kpjcp")
 [node name="hitBox" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox"]
+position = Vector2(3, 33)
 shape = SubResource("RectangleShape2D_cvnsp")
 
 [node name="hurtBoxDown" type="Area2D" parent="." groups=["hurtBox"]]
@@ -324,6 +326,7 @@ position = Vector2(-23, 4)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxDown"]
 position = Vector2(23, 101)
 shape = SubResource("RectangleShape2D_6t5aa")
+disabled = true
 
 [node name="hurtBoxUp" type="Area2D" parent="." groups=["hurtBox"]]
 position = Vector2(-23, 4)
@@ -331,6 +334,7 @@ position = Vector2(-23, 4)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxUp"]
 position = Vector2(22, -75)
 shape = SubResource("RectangleShape2D_6t5aa")
+disabled = true
 
 [node name="hurtBoxLeft" type="Area2D" parent="." groups=["hurtBox"]]
 position = Vector2(-23, 4)
@@ -338,6 +342,7 @@ position = Vector2(-23, 4)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxLeft"]
 position = Vector2(-66, 13)
 shape = SubResource("RectangleShape2D_vgqql")
+disabled = true
 
 [node name="hurtBoxRight" type="Area2D" parent="." groups=["hurtBox"]]
 position = Vector2(-23, 4)
@@ -345,5 +350,6 @@ position = Vector2(-23, 4)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurtBoxRight"]
 position = Vector2(110, 13)
 shape = SubResource("RectangleShape2D_vgqql")
+disabled = true
 
 [connection signal="area_entered" from="hitBox" to="." method="_on_hit_box_area_entered"]

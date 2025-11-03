@@ -1,24 +1,22 @@
-extends CharacterBody2D
+extends BaseEntity
 class_name Enemy
 
 var player : Player
-var SPEED : float = 200
-var vida : float = 100
-var damage : float  = 20
+
+func _ready() -> void:
+	damage = 20
+	speed = 100
+	sprite = $sprite
 
 func _process(delta: float) -> void:
-	velocity = position.direction_to(player.position) * SPEED
-	move_and_slide()
+	animation(direction)
 
 func setup(_player : Player) -> void:
 	player = _player
 
+func setDirection() -> void:
+	if player != null:
+		direction = position.direction_to(player.position)
 
-func _on_hit_box_area_entered(area: Area2D) -> void:
-	if area.is_in_group('hurtBox') and area.get_parent() == player:
-		takeDamage(area.get_parent().damage)
-
-func takeDamage(_damage : float) -> void:
-	vida -= _damage
-	if vida < 0:
-		queue_free()
+func isRival (area : Area2D) -> bool:
+	return super.isRival(area) and area.get_parent() is Player

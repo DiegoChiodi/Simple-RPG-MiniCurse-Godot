@@ -1,15 +1,47 @@
-extends CharacterBody2D
+extends BaseEntity
 class_name Player
 
-var directionLast : Vector2 = Vector2.ZERO
-@onready var sprite : AnimatedSprite2D = $sprite
-var speed : float = 300.0
-var vida : float = 300.0
-var damage : float = 50.0
 
-func _physics_process(delta: float) -> void:
-	var direction : Vector2 = Vector2.ZERO
+@onready var hurtDownCol  := $hurtBoxDown/CollisionShape2D
+@onready var hurtUpCol    := $hurtBoxUp/CollisionShape2D
+@onready var hurtLeftCol  := $hurtBoxLeft/CollisionShape2D
+@onready var hurtRightCol := $hurtBoxRight/CollisionShape2D
+
+
+var directionLast : Vector2 = Vector2.ZERO
+var attackDelay : float = 0.1
+var attackWait : float = attackDelay
+var inAttack : bool = false
+
+func _ready() -> void:
+	sprite = $sprite
+
+func _process(delta: float) -> void:
+	if (Input.is_action_just_pressed("left_click") or Input.is_action_just_pressed("space")) and !inAttack:
+		if directionLast.x == -1:
+			hurtLeftCol.disabled = false
+		elif directionLast.x == 1:
+			hurtRightCol.disabled = false
+		elif directionLast.y == 1:
+			hurtDownCol.disabled = false
+		elif directionLast.y == -1:
+			hurtUpCol.disabled = false
+		
+		attackWait = 0.0
+		inAttack = true
 	
+	if attackWait < attackDelay:
+		attackWait += delta
+	else:
+		hurtLeftCol.disabled = true
+		hurtRightCol.disabled = true
+		hurtDownCol.disabled = true
+		hurtUpCol.disabled = true
+		inAttack = false
+	
+	animation(directionLast)
+ 
+func setDirection() -> void:
 	var moving : bool = false
 	
 	sprite.flip_h = false
@@ -23,6 +55,8 @@ func _physics_process(delta: float) -> void:
 		direction.y = -1
 		moving = true
 		sprite.play("runUp")
+	else:
+		direction.y = 0
 		
 	if Input.is_action_pressed("Right"):
 		direction.x = 1
@@ -34,12 +68,13 @@ func _physics_process(delta: float) -> void:
 		moving = true
 		sprite.play("runX")
 		sprite.flip_h = true
+	else:
+		direction.x = 0
 	
 	if moving:
-		velocity = direction * speed
 		directionLast = direction
 	else:
-		velocity = Vector2.ZERO
+		direction = Vector2.ZERO
 		if directionLast.x == 1:
 			sprite.play("idleX")
 		elif directionLast.x == -1:
@@ -49,16 +84,6 @@ func _physics_process(delta: float) -> void:
 			sprite.play("idleDown")
 		else:
 			sprite.play("idleUp")
-	
-	move_and_slide()
-	
-	
 
-func _on_hit_box_area_entered(area: Area2D) -> void:
-	if area.is_in_group('hurtBox') and area.get_parent() is Enemy:
-		takeDamage(area.get_parent().damage)
-
-func takeDamage(_damage : float) -> void:
-	vida -= _damage
-	if vida < 0:
-		queue_free()
+func isRival (area : Area2D) -> bool:
+	return super.isRival(area) and area.get_parent() is Enemy
