@@ -302,6 +302,7 @@ size = Vector2(42, 80)
 
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(1, -1)
+scale = Vector2(0.5, 0.5)
 script = ExtResource("1_xhfnw")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]

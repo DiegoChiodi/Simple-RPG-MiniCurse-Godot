@@ -38,38 +38,47 @@ func _process(delta: float) -> void:
 		hurtDownCol.disabled = true
 		hurtUpCol.disabled = true
 		inAttack = false
-	
-	animation(directionLast)
  
 func setDirection() -> void:
-	var moving : bool = false
-	
 	sprite.flip_h = false
 	
+		# 1) Captura o movimento
+	direction = Vector2.ZERO
+
 	if Input.is_action_pressed("Down"):
 		direction.y = 1
-		moving = true
-		sprite.play("runDown")
-	
 	elif Input.is_action_pressed("Up"):
 		direction.y = -1
-		moving = true
-		sprite.play("runUp")
-	else:
-		direction.y = 0
-		
+
 	if Input.is_action_pressed("Right"):
 		direction.x = 1
-		moving = true
-		sprite.play("runX")
-	
 	elif Input.is_action_pressed("Left"):
 		direction.x = -1
-		moving = true
-		sprite.play("runX")
-		sprite.flip_h = true
+
+	# 2) Verifica se está se movendo
+	var moving : bool = direction != Vector2.ZERO
+
+	# 3) Decide a animação DEPOIS de saber a direção final
+	if moving:
+		if abs(directionLast.x) >= abs(directionLast.y):
+			# Movimento horizontal (esquerda / direita)
+			sprite.play("runX")
+			sprite.flip_h = directionLast.x < 0
+		elif directionLast.y > 0:
+			sprite.play("runDown")
+		else:
+			sprite.play("runUp")
 	else:
-		direction.x = 0
+		if directionLast.x == 1:
+			sprite.play("idleX")
+		elif directionLast.x == -1:
+			sprite.play("idleX")
+			sprite.flip_h = true
+		elif directionLast.y == 1:
+			sprite.play("idleDown")
+		else:
+			sprite.play("idleUp")
+
 	
 	if moving:
 		directionLast = direction
@@ -84,6 +93,8 @@ func setDirection() -> void:
 			sprite.play("idleDown")
 		else:
 			sprite.play("idleUp")
+	
+	
 
 func isRival (area : Area2D) -> bool:
 	return super.isRival(area) and area.get_parent() is Enemy

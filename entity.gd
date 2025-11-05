@@ -45,7 +45,6 @@ func animation(dir : Vector2) -> void:
 			sprite.play("idleUp")
 		else: 
 			sprite.play("idleDown")
-	
 
 func setVelocity() -> void:
-	velocity = direction * speed + impulse * speed * 3
+	velocity = direction * speed + impulse * 200 * 3
