@@ -7,6 +7,8 @@ var vida : float = 100.0
 var damage : float = 50.0
 var direction := Vector2.ZERO
 var sprite : AnimatedSprite2D
+var moving : bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -33,18 +35,28 @@ func takeDamage(attacker : BaseEntity) -> void:
 
 func setDirection() -> void:
 	direction = Vector2.ZERO
-
+	moving = true
 
 func animation(dir : Vector2) -> void:
-	
-	if abs(dir.x) > abs(dir.y):
-		sprite.play("idleX")
-		sprite.flip_h = dir.x < 0  # Flip apenas no X
+	if moving:
+		if abs(dir.x) >= abs(dir.y):
+			# Movimento horizontal (esquerda / direita)
+			sprite.play("runX")
+			sprite.flip_h = dir.x < 0
+		elif dir.y > 0:
+			sprite.play("runDown")
+		else:
+			sprite.play("runUp")
 	else:
-		if dir.y < 0:
-			sprite.play("idleUp")
-		else: 
+		if dir.x == 1:
+			sprite.play("idleX")
+		elif dir.x == -1:
+			sprite.play("idleX")
+			sprite.flip_h = true
+		elif dir.y == 1:
 			sprite.play("idleDown")
+		else:
+			sprite.play("idleUp")
 
 func setVelocity() -> void:
 	velocity = direction * speed + impulse * 200 * 3
